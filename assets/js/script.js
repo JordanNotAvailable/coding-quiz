@@ -1,89 +1,151 @@
-var highscoreList = document.querySelector("#highscore-list");
-var highscoreCountSpan = document.querySelector("#highscore-count");
-// create an open array for highscores
+//set all global variables
+var body = document.querySelector("body");
+var timer = document.querySelector("#time");
+var startButton = document.querySelector("#start-button");
+var question = document.querySelector(".question");
+var choicesGroup = document.querySelector(".answerChoices");
+var returnAnswer = document.querySelector(".returnAnswer");
+var finalScore = document.querySelector(".final-score");
+var endOfGame = document.querySelector(".endgame");
+var main = document.querySelector(".main");
+var title = document.querySelector(".title");
+var answer1 = document.querySelector("#answer1");
+var answer2 = document.querySelector("#answer2");
+var answer3 = document.querySelector("#answer3");
+var answer4 = document.querySelector("#answer4");
+var submitInitials = document.querySelector(".initial-form");
 
-var highscores = [];
+var currentTime = timer.textContent;
+var userQuestion = 0;
 
-// The following function renders items in a highscore list as <li> elements
-function renderHighscores() {
-    // Clear todoList element and update highscoreCountSpan
-    highscoreList.innerHTML = "";
-    todoCountSpan.textContent = highscores.length;
-  
-    // Render a new li for each highscore
-    for (var i = 0; i < highscores.length; i++) {
-      var highscores = highscores[i];
-  
-      var li = document.createElement("li");
-      li.textContent = highscores;
-      li.setAttribute("data-index", i);
-  
-      var button = document.createElement("button");
-      button.textContent = "Complete ✔️";
-  
-      li.appendChild(button);
-      todoList.appendChild(li);
-    }
-  }
-
-function init() {
-    // Get stored highscores from localStorage
-    var storedHighscores = JSON.parse(localStorage.getItem("highscores"));
-  
-    // If highscores were retrieved from localStorage, update the highscores array to it
-    if (storedHighscores !== null) {
-      highscores = storedHighscores;
-    }
-  
-    // This is a helper function that will render highscores to the DOM
-    renderHighscores();
+//set high score to 0 if there isn't a high score in local storage 
+var highScore = localStorage.getItem(".highScore");
+if (highScore === null) {
+  localStorage.setItem("highScore", 0);
+  highScore = 0;
 }
 
-// a timer will be displayed in the top right corner
-// a button in the middle named start, once pressed the quiz will begin and the timer starts
-document.getElementById("start-button").addEventListener("click", function(){
-    var timeleft = 50;
-    var downloadTimer = setInterval(function function1(){
-    document.getElementById("timer").innerHTML = timeleft 
-    timeleft -= 1;
-    if(timeleft <= 0){
-        clearInterval(downloadTimer);
-        document.getElementById("timer").innerHTML = "Time is up!"
+//create an array of all questions wiht their corresponding answers
+// example?
+//[
+//   {
+//     title: 'Commonly used data types DO NOT include:',
+//     choices: ['strings', 'booleans', 'alerts', 'numbers'],
+//     answer: 'alerts',
+//   },
+//   {
+//    //similar as above
+//   }
+// ]
+var questions = [{
+  questionString: "Commonly used data types DO NOT include:",
+  answers: ["strings", "booleans", "alerts", "numbers"],
+  correctAnswer: 2,
+},
+{
+  questionString: "The condition in an if / else statement is enclosed within _____.",
+  answers: ["quotes", "curly brackets", "parentheses", "square brackets"],
+  correctAnswer: 2,
+},
+{
+  questionString: "Arrays in JavaScript can be used to store _____.",
+  answers: ["numbers and strings", "other arrays", "booleans", "all of the above"],
+  correctAnswer: 3,
+},
+{
+  questionString: "String values must be enclosed within _____ when being asssigned to variables.",
+  answers: ["commas", "curly brackets", "quotes", "parentheses"],
+  correctAnswer: 1,
+},
+{
+  questionString: "A very useful tool used during developing and debugging for printing content to debugger is:",
+  answers: ["console.log", "JavaScript", "terminal/bash", "for loops"],
+  correctAnswer: 0,
+}   
+]
+
+// create dynamic elements for answers and new questions
+function quizQuestion(timerInterval) {
+  checkTime(timerInterval);
+  if (userQuestion < questions.length) {
+    question.textContent = questions[userQuestion].questionString;
+    answer1.textContent = questions[userQuestion].answers[0];
+    answer2.textContent = questions[userQuestion].answers[1];
+    answer3.textContent = questions[userQuestion].answers[2];
+    answer4.textContent = questions[userQuestion].answers[3];
+  } else {
+    endGame();
+  }
+}
+
+// check if answer is correct or incorrect and display message 
+function checkAnswer() {
+  if ((this.textContent) == (questions[userQuestion].answers[questions[userQuestion].correctAnswer])) {
+    returnAnswer.textContent= "Correct! 😊";
+  } else {
+    currentTime -= 5;
+    returnAnswer.textContent="Incorrect! 😢";
+    if (currentTime < 1) {
+      endGame();
     }
-    }, 1000);
-    
-    console.log('button clicked')
+  }
+  userQuestion++;
+  
+  quizQuestion();
+}
+
+// call the checking answer function of each answer clicked
+var buttons = document.querySelectorAll(".answer-choice").forEach(function (event) {
+  event.addEventListener("click", checkAnswer);
+})
+
+// make sure theres time left and if time runs out end the game
+function checkTime(timerInterval) {
+  if (userQuestion == questions.length) {
+    clearInterval(timerInterval);
+    endGame();
+  } else if (currentTime <= 0) {
+    timer.textContent = 0;
+    currentTime = 0;
+    clearInterval(timerInterval);
+    endGame();
+  }
+}
+
+// end game
+function endGame() {
+  question.style.display = "none";
+  choicesGroup.style.display = "none";
+  returnAnswer.style.display = "none";
+  endOfGame.style.display = "block";
+  title.style.display = "none";
+  
+  if (currentTime > parseInt(localStorage.getItem("highScore"))) {
+    finalScore.textContent = ("You have the new high score! Your final score is " + currentTime + ".");
+  } else {
+    finalScore.textContent = ("Your final score is " + currentTime + ".");
+  }
+}
+
+// reset to beginning to repeat game
+function resetGame() {
+  var nickname = document.querySelector("#nickname").value;
+  localStorage.setItem("highScore", currentTime);
+  localStorage.setItem(nickname, currentTime);
+}
+
+// start button with click function to begin game
+startButton.addEventListener("click", function () {
+  var timerStart = setInterval(function () {
+    currentTime--;
+    timer.textContent = currentTime;
+    checkTime(timerStart);
+  }, 1000)
+  
+  startButton.style.display= "none";
+  choicesGroup.style.display = "block";
+  main.style.display = "block";
+  question.style.display = "block";
+  
+  quizQuestion(timerStart);
 });
-
-
-
-
-
-// 5 objects with the object name being the question and the multiple chopice answers being the object information
-// create an if statment for the false and a seperate if statement for the true
-
-// example???
-// [
-//     {
-//       title: 'Commonly used data types DO NOT include:',
-//       choices: ['strings', 'booleans', 'alerts', 'numbers'],
-//       answer: 'alerts',
-//     },
-//     {
-//      //similar as above
-//     }
-//   ]
-
-// each question has to disappear once answered and the next must appear
-// there will be light text under the answers to say if it was right or wrong
-// once quiz is completed a 'name your score' page must pop up for you to type a short name into
-// once score is 'submitted' you will be taken to a highscores page
-// once on the highscore page you will see the other scores 
-
-// function secondaryPage {
-//     window.open{"./assets/html 2/index2.html"}
-// }
-
-// youll be given the options to clear highscores and another to return back to the quiz page
-// must be a completed cycle and repeatable
-
