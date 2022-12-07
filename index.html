@@ -2,27 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" type="text/css" href="./assets/css/reset.css"> -->
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <title>Coding Quiz Demo</title>
+    <title>Demo Coding Quiz</title>
+    <link rel="stylesheet" href="/assets/css/reset.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
-
 <body>
-    <header class="page-1">
-        <h1 href="./assets/html 2/index2.html">View Highscores</h1>
-        <h2 id="timer">Time:</h2>
+    <!-- link to highscore page and timer -->
+    <header>
+        <h1 class="score-list"><a href="./index2.html">View High Scores</a></h1>
+        <h2 class="timer">Time: <span id="time">50</span></h2>
     </header>
-    
-
-    <button id="start-button">Start Quiz</button>
-
-
-
-
+    <!-- start button to start quiz and timer -->
+    <div class="button-start">
+        <button type="button" id="start-button">Start Quiz</button>
+    </div>
+    <!-- main section of questions -->
+    <div class="main"><span class ="title">Coding Quiz</span>
+        <div class="question-block">
+            <p class="question"></p>
+        </div>
+        <div class="answerChoices">
+            <li><button class="answer-choice" id="answer1"></button></li>
+            <li><button class="answer-choice" id="answer2"></button></li>
+            <li><button class="answer-choice" id="answer3"></button></li>
+            <li><button class="answer-choice" id="answer4"></button></li>
+        </div>
+        <br>
+        <div class = "returnAnswer"></div>
+        <div class="currentScore"></div>
+    </div>
+<!-- finished quiz and enter name -->
+    <div class="endgame">
+        <div>
+            <h3 class="heading">All Done!</h3>
+            <p class="final-score"></p>
+        </div>
+        <div>
+            <form action="./assets/html 2/index2.html" class="initial-form">
+                Enter nickname: <input type="text" id="nickname">
+                <br>
+                <br>
+                <input type="submit" class="submit" onclick="resetGame()">
+            </form>
+        </div>
+    </div>
 
     <script src="./assets/js/script.js"></script>
 </body>
-
 </html>
