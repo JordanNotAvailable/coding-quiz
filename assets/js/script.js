@@ -14,6 +14,7 @@ var answer2 = document.querySelector("#answer2");
 var answer3 = document.querySelector("#answer3");
 var answer4 = document.querySelector("#answer4");
 var submitInitials = document.querySelector(".submit");
+var nickname = document.getElementById("nickname")
 
 var currentTime = timer.textContent;
 var userQuestion = 0;
@@ -26,7 +27,7 @@ if (highScore === null) {
 }
 
 // empty array to track highscores
-var scores = [];
+var scores = JSON.parse(localStorage.getItem('scores'));
 
 //create an array of all questions wiht their corresponding answers
 // example?
@@ -137,15 +138,22 @@ function resetGame() {
   localStorage.setItem(nickname, currentTime);
 }
 
+
 // click event for submit button
 // fix local storage section
 submitInitials.addEventListener("click", function(){
-  window.location.href= "index2.html"
-
-  var storeHighscores = JSON.parse(localStorage.getItem("scores"));
-
+  var initials = nickname.value;
+  console.log(initials, currentTime)
+  var score = {
+    name: initials,
+    score: currentTime
+  }
+  scores.push(score);
   localStorage.setItem("scores", JSON.stringify(scores));
+  window.location.href= "index2.html";
+  // var display = localStorage.getItem('scores');
 })
+
 
 // start button with click function to begin game
 startButton.addEventListener("click", function () {
