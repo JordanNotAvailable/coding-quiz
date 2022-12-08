@@ -26,4 +26,4 @@ N/A
 
 ## Depoyment
 
-[This is an external link to the live site jordannotavailable.github.io/password-generator/(https://jordannotavailable.github.io/password-generator/)
+[This is an external link to the live site jordannotavailable.github.io/coding-quiz/(https://jordannotavailable.github.io/coding-quiz/index.html)
